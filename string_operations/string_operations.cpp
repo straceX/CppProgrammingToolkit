@@ -24,3 +24,20 @@ size_t count_words(const std::string &sparam, const std::string &sword)
 		++ival;
 	return ival;
 }
+size_t replace_all_words(std::string& sparam, const std::string& from, const std::string& to) 
+{
+		
+	if(sparam.empty() || from.empty() || to.empty())	return 0;
+	
+	size_t start_pos = 0;
+	int ival = 0;
+	while ((start_pos = str.find(from,start_pos)) != std::string::npos)
+	{
+		str.replace(start_pos, from.length(), to);
+		std::cout << str << std::endl;
+		++start_pos;
+		++ival;
+	}
+	
+	return ival;
+}
