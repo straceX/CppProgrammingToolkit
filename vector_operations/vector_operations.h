@@ -10,3 +10,12 @@ std::map<T,int> count_member(const std::vector<T> &vparam)
 	return cmap;
 }
 
+template<typename T>
+bool make_vector_unique_member(std::vector<T> &vec)
+{
+	if (vec.empty()) return false;
+
+	std::set<T> s(vec.begin(), vec.end());
+	vec.assign(s.begin(), s.end());
+	return true;
+}
