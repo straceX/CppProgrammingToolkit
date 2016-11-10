@@ -41,3 +41,19 @@ size_t replace_all_words(std::string& sparam, const std::string& from, const std
 	
 	return ival;
 }
+
+bool is_string_character_unique(const std::string &sparam)
+{
+	if (sparam.length() > 256)
+		return false;
+
+	std::bitset<256> bset;
+
+	for (unsigned char c : sparam) {
+		if (bset.test(c))
+			return false;
+		
+		bset.set(c);
+	}
+	return true;
+}
