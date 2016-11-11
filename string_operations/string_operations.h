@@ -1,4 +1,6 @@
-#include <string>
+#include <iostream>
+#include<string>
+#include<bitset>
 
 /* Lets write test code that test whether a string is a rotated form of another string*/
 /*result must be oneliner :)*/
