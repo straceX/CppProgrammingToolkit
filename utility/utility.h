@@ -1,6 +1,6 @@
 
 /*Learn array size via macro*/
-#define ARRAY_SIZE(param) (sizeof(param)/sizeof(*(param)));
+#define ARRAY_SIZE(param) (sizeof(param)/sizeof(*(param)))
 
 /*Learn array size via template and constexpr [C++11]*/
 template<typename T, size_t n>
