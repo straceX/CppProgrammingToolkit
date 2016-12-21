@@ -1,5 +1,13 @@
+/**
+ * @file   sqllite_db_operations.cpp
+ * @Author sX
+ * @date   December, 2016
+ * @brief  Brief description of file.
+ **/
+
 #include "sqllite_db_operations.h"
 
+/* */
 sqllitedb::sqllitedb(const std::string &dbname) : dbname(dbname)
 {
     try {
@@ -16,12 +24,19 @@ sqllitedb::sqllitedb(const std::string &dbname) : dbname(dbname)
     }
 
 }
-
-std::string sqllitedb::db_version()
+/* */
+std::string sqllitedb::db_version() noexcept
 {
     return std::string(sqlite3_libversion());
 }
 
+/* */
+int sqllitedb::db_version_number() noexcept
+{
+    return sqlite3_libversion_number();
+}
+
+/* */
 bool sqllitedb::table_row_count(std::string table_name,int &row_count)
 {
     std::string querry = "select count(*) from " + table_name;
@@ -45,6 +60,7 @@ bool sqllitedb::table_row_count(std::string table_name,int &row_count)
 
 }
 
+/* */
 bool sqllitedb::db_table_list()
 {
     std::string querry = "SELECT name FROM my_db.sqlite_master WHERE type='table'";
@@ -66,6 +82,7 @@ bool sqllitedb::db_table_list()
     return true;
 }
 
+/* */
 bool sqllitedb::exec_querry(std::string querry)
 {
     try {
@@ -85,6 +102,8 @@ bool sqllitedb::exec_querry(std::string querry)
 
     return true;
 }
+
+/* */
 bool sqllitedb::create_table(std::string querry)
 {
     try {
@@ -104,6 +123,7 @@ bool sqllitedb::create_table(std::string querry)
     return true;
 }
 
+/* */
 bool sqllitedb::update_table(std::string querry)
 {
     try {
@@ -123,6 +143,7 @@ bool sqllitedb::update_table(std::string querry)
     return true;
 }
 
+/* */
 bool sqllitedb::delete_table(std::string querry)
 {
     try {
@@ -142,12 +163,13 @@ bool sqllitedb::delete_table(std::string querry)
     return true;
 }
 
-
-sqllitedb::sqllitedb(const sqllitedb &sqllitedbObj)
+/* */
+sqllitedb::sqllitedb(const sqllitedb &sqllitedbObj) noexcept
 {
     return sqllitedb(sqllitedbObj.dbname);
 }
 
+/* */
 sqllitedb &sqllitedb::operator=(const sqllitedb &sqllitedbObj)
 {
     this->db = sqllitedbObj.db;
@@ -159,7 +181,29 @@ sqllitedb &sqllitedb::operator=(const sqllitedb &sqllitedbObj)
     this->column_count = sqllitedbObj.column_count;
 }
 
+/* */
+bool sqllitedb::delete_rows(std::map<std::string,std::string> column_and_row_name,std::string table_name)
+{
+    if(column_and_row_name.empty())
+        return false;
+    std::string querry = "DELETE FROM " + table_name+ " WHERE ";
+    for(auto &val : column_and_row_name)
+    {
+        querry += val.first;
+        querry += " = ";
+        querry += val.second;
+    }
+    querry += ";";
+
+    if(exec_querry(querry))
+        return true;
+    return false;
+
+}
+
+/* */
 sqllitedb::~sqllitedb()
 {
-    /*will write*/
+    sqlite3_close(db);
+
 }

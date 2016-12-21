@@ -1,12 +1,25 @@
+/**
+ * @file   sqllite_db_operations.h
+ * @Author sX
+ * @date   December, 2016
+ * @brief  Brief description of file.
+ **/
+
 #ifndef SQLLITE_DB_OPERATIONS_H
 #define SQLLITE_DB_OPERATIONS_H
+
+#if defined(_pragma_once_support)
+    #pragma once
+#endif
 
 #include "sqlite3.h"
 
 #include <iostream>
 #include <vector>
 #include <map>
-class sqllitedb {
+class sqllitedb final
+{
+
 private:
     sqlite3 *db;
     const std::string dbname;
@@ -49,6 +62,7 @@ public:
     ~sqllitedb();
 
     std::string db_version();
+    int sqllitedb::db_version_number();
     bool sqllitedb::table_row_count(std::string table_name,int &row_count);
     bool sqllitedb::db_table_list();
 
@@ -57,6 +71,8 @@ public:
     bool create_table(std::string querry);
     bool update_table(std::string querry);
     bool delete_table(std::string querry);
+
+    bool delete_rows(std::vector<std::string> cond);
 
 protected:
     std::vector<std::string> table_list;
