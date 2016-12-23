@@ -17,6 +17,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+
 class sqllitedb final
 {
 
@@ -29,7 +30,7 @@ private:
     size_t row_count = 0;
     size_t column_count = 0;
 
-
+    std::vector<std::string> dbtables;
 
     int callback(void *arg, int argc, char **argv, char **colName)
     {
@@ -72,7 +73,8 @@ public:
     bool update_table(std::string querry);
     bool delete_table(std::string querry);
 
-    bool delete_rows(std::vector<std::string> cond);
+    bool sqllitedb::delete_rows(std::string table_name,std::map<std::string,std::string> column_and_row_name)
+    std::tuple<std::vector::iterator,std::map::iterator> sqllitedb::find_cell_position(const std::string &column,const std::string &value);
 
 protected:
     std::vector<std::string> table_list;
