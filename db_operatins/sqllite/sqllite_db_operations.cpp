@@ -1,9 +1,9 @@
 /**
- * @file   sqllite_db_operations.cpp
- * @Author sX
- * @date   December, 2016
- * @brief  Brief description of file.
- **/
+* @file   sqllite_db_operations.cpp
+* @Author sX
+* @date   December, 2016
+* @brief  Brief description of file.
+**/
 
 #include "sqllite_db_operations.h"
 
@@ -37,23 +37,25 @@ int sqllitedb::db_version_number() noexcept
 }
 
 /*Learn table's row count*/
-bool sqllitedb::table_row_count(std::string table_name,int &row_count)
+bool sqllitedb::table_row_count(std::string table_name, int &row_count)
 {
     std::string querry = "select count(*) from " + table_name;
 
     try {
 
-         if (sqlite3_exec(db, querry.c_str(), callback, &row_count, &errMsg) != SQLITE_OK)
-         {
+        if (sqlite3_exec(db, querry.c_str(), findcolumnNumber, NULL, &errMsg) != SQLITE_OK)
+        {
+            //fix just one time run
             throw errMsg;
-         }
-         std::cout << "Querry execed" << std::endl;
+        }
+        std::cout << "Querry execed" << std::endl;
 
-    } catch (const char* msg) {
-         std::cerr << msg << std::endl;
-         sqlite3_free(errMsg);
-         sqlite3_close(db);
-         return false;
+    }
+    catch (const char* msg) {
+        std::cerr << msg << std::endl;
+        sqlite3_free(errMsg);
+        sqlite3_close(db);
+        return false;
     }
 
     return true;
@@ -68,16 +70,17 @@ bool sqllitedb::db_table_list()
 
     try {
 
-         if (sqlite3_exec(db, querry.c_str(), callback, NULL, &errMsg) != SQLITE_OK)
-         {
+        if (sqlite3_exec(db, querry.c_str(), fillvectormap, NULL, &errMsg) != SQLITE_OK)
+        {
             throw errMsg;
-         }
+        }
 
-    } catch (const char* msg) {
-         std::cerr << msg << std::endl;
-         sqlite3_free(errMsg);
-         sqlite3_close(db);
-         return false;
+    }
+    catch (const char* msg) {
+        std::cerr << msg << std::endl;
+        sqlite3_free(errMsg);
+        sqlite3_close(db);
+        return false;
     }
 
     return true;
@@ -88,17 +91,18 @@ bool sqllitedb::exec_querry(std::string querry)
 {
     try {
 
-         if (sqlite3_exec(db, querry.c_str(), NULL, NULL, &errMsg) != SQLITE_OK)
-         {
+        if (sqlite3_exec(db, querry.c_str(), NULL, NULL, &errMsg) != SQLITE_OK)
+        {
             throw errMsg;
-         }
-         std::cout << "Querry execed" << std::endl;
+        }
+        std::cout << "Querry execed" << std::endl;
 
-    } catch (const char* msg) {
-         std::cerr << msg << std::endl;
-         sqlite3_free(errMsg);
-         sqlite3_close(db);
-         return false;
+    }
+    catch (const char* msg) {
+        std::cerr << msg << std::endl;
+        sqlite3_free(errMsg);
+        sqlite3_close(db);
+        return false;
     }
 
     return true;
@@ -111,11 +115,12 @@ bool sqllitedb::create_table(std::string querry)
 
         if (sqlite3_exec(db, querry.c_str(), NULL, NULL, &errMsg) != SQLITE_OK)
         {
-           throw errMsg;
+            throw errMsg;
         }
         std::cout << "Table created" << std::endl;
 
-    } catch (const char* msg) {
+    }
+    catch (const char* msg) {
         std::cerr << msg << std::endl;
         sqlite3_free(errMsg);
         sqlite3_close(db);
@@ -131,11 +136,12 @@ bool sqllitedb::update_table(std::string querry)
 
         if (sqlite3_exec(db, querry.c_str(), NULL, NULL, &errMsg) != SQLITE_OK)
         {
-           throw errMsg;
+            throw errMsg;
         }
         std::cout << "Table updated" << std::endl;
 
-    } catch (const char* msg) {
+    }
+    catch (const char* msg) {
         std::cerr << msg << std::endl;
         sqlite3_free(errMsg);
         sqlite3_close(db);
@@ -151,11 +157,12 @@ bool sqllitedb::delete_table(std::string querry)
 
         if (sqlite3_exec(db, querry.c_str(), NULL, NULL, &errMsg) != SQLITE_OK)
         {
-           throw errMsg;
+            throw errMsg;
         }
         std::cout << "Table deleted" << std::endl;
 
-    } catch (const char* msg) {
+    }
+    catch (const char* msg) {
         std::cerr << msg << std::endl;
         sqlite3_free(errMsg);
         sqlite3_close(db);
@@ -176,19 +183,19 @@ sqllitedb &sqllitedb::operator=(const sqllitedb &sqllitedbObj)
     this->db = sqllitedbObj.db;
     this->column_count = sqllitedbObj.column_count;
     this->table_list = sqllitedbObj.table_list;
-    this->dbname = sqllitedbObj.dbname;
+    //this->dbname = sqllitedbObj.dbname;
     this->table = sqllitedbObj.table;
     this->row_count = sqllitedbObj.row_count;
     this->column_count = sqllitedbObj.column_count;
 }
 
 /*delete row(s)*/
-bool sqllitedb::delete_rows(std::string table_name,std::map<std::string,std::string> column_and_row_name)
+bool sqllitedb::delete_rows(std::string table_name, std::map<std::string, std::string> column_and_row_name)
 {
-    if(column_and_row_name.empty())
+    if (column_and_row_name.empty())
         return false;
-    std::string querry = "DELETE FROM " + table_name+ " WHERE ";
-    for(auto &val : column_and_row_name)
+    std::string querry = "DELETE FROM " + table_name + " WHERE ";
+    for (auto &val : column_and_row_name)
     {
         querry += val.first;
         querry += " = ";
@@ -196,34 +203,35 @@ bool sqllitedb::delete_rows(std::string table_name,std::map<std::string,std::str
     }
     querry += ";";
 
-    if(exec_querry(querry))
+    if (exec_querry(querry))
         return true;
     return false;
 
 }
 
 /*Find column = value cell position*/
-std::tuple<std::vector::iterator,std::map::iterator> sqllitedb::find_cell_position(const std::string &column,const std::string &value)
+std::tuple<std::vector< std::map<std::string, std::string> >::iterator, std::map<std::string, std::string>::iterator> sqllitedb::find_cell_position(const std::string &column, const std::string &value)
 {
     //std::tuble<std::vector::iterator,std::map::iterator> ptr;
-    std::map::iterator mapIter;
+    std::map<std::string, std::string>::iterator mapIter;
 
-    for (auto vecIter = dbtables.begin(); vecIter != dbtables.end(); ++vecIter)
+    for (auto vecIter = table.begin(); vecIter != table.end(); ++vecIter)
     {
         mapIter = vecIter->find(column);
-        if ( mapIter == mapIter.end)
+
+        if (mapIter == vecIter->end())
             continue;
         else
         {
-            if(mapIter->second == value)
-                return std::tuple<vecIter,mapIter>;
+            if (mapIter->second == value)
+                return std::tuple<std::vector< std::map<std::string, std::string> >::iterator, std::map<std::string, std::string>::iterator>(vecIter, mapIter);
             else
-                continue
+                continue;
         }
 
     }
 
-    return std::tuple<nullptr,nullptr>;
+    return std::tuple<std::vector< std::map<std::string, std::string> >::iterator, std::map<std::string, std::string>::iterator>(nullptr, nullptr);
 }
 
 /*Deconstructor*/
