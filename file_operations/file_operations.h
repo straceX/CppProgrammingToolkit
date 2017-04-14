@@ -8,3 +8,6 @@
 #endif
 
 bool is_fexist(const std::string& name);
+bool isFileExist(const std::string& filePath); //C++11
+
+int getFileLineNumber(const std::string filename); //C++11
