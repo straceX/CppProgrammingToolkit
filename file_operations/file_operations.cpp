@@ -27,3 +27,23 @@ int getFileLineNumber(const std::string filename)
 	return lineCount;
 }
 
+
+std::string getFileExtension(const std::string& filePath)
+{
+	std::string result;
+	int dotIter;
+	int slashIter;
+
+	if(filePath.empty())
+		return "";
+	
+	dotIter = filePath.find_last_of(".");
+	slashIter = filePath.find_last_of("/\\");
+
+	if(dotIter > slashIter)
+		result = filePath.substr(dotIter + 1);
+	else
+		result = filePath.substr(slashIter + 1);
+	
+	return result;
+}
